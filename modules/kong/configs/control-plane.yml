@@ -1,0 +1,59 @@
+# Do not use Kong Ingress Controller
+ingressController:
+ enabled: false
+  
+image:
+ repository: kong/kong-gateway
+ tag: "3.7.1.2"
+  
+# Mount the secret created earlier
+secretVolumes:
+ - kong-cluster-cert
+  
+env:
+ # This is a control_plane node
+ role: control_plane
+ # These certificates are used for control plane / data plane communication
+ cluster_cert: ${KONG_CLUSTER_CERT}
+ cluster_cert_key: ${KONG_CLUSTER_CERT_KEY}
+  
+ # Database
+ # CHANGE THESE VALUES
+ database: postgres
+ pg_database: ${KONG_DATABASE}
+ pg_user: ${KONG_DATABASE_USER}
+ pg_password: ${KONG_DATABASE_PASSWORD}
+ pg_host: ${KONG_DATABASE_HOST}
+ pg_ssl: "off"
+  
+ # Kong Manager password
+ password: ${KONG_MANAGER_PASSWORD}
+  
+# Enterprise functionality
+enterprise:
+ enabled: false
+  
+# The control plane serves the Admin API
+admin:
+ enabled: true
+ http:
+   enabled: true
+  
+# Clustering endpoints are required in hybrid mode
+cluster:
+ enabled: true
+ tls:
+   enabled: true
+  
+clustertelemetry:
+ enabled: true
+ tls:
+   enabled: true
+  
+# Optional features
+manager:
+ enabled: false
+  
+# These roles will be served by different Helm releases
+proxy:
+ enabled: false
