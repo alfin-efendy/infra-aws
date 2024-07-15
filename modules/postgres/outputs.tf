@@ -1,5 +1,5 @@
 output "database_host" {
-  value = kubernetes_service.postgres.spec.0.cluster_ip
+  value = "${var.instance_name}.${var.namespace}"
 }
 
 output "database_port" {

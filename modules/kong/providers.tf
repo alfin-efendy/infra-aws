@@ -42,8 +42,8 @@ provider "helm" {
 }
 
 provider "postgresql" {
-  host            = var.database_host
-  port            = var.database_port
+  host            = "localhost"
+  port            = 52935
   database        = var.database_name
   username        = var.database_user
   password        = var.database_password

@@ -111,9 +111,9 @@ resource "helm_release" "control_plane" {
   repository = "https://charts.konghq.com"
 
   values = [templatefile("${path.module}/configs/control-plane.yml", {
-    KONG_CLUSTER_CERT      = tls_self_signed_cert.kong_clustering_cert.cert_pem
-    KONG_CLUSTER_CERT_KEY  = tls_private_key.kong_clustering_key.private_key_pem
-    KONG_DATABASE_HOST     = var.database_host
+    KONG_CLUSTER_CERT      = local_file.kong_clustering_cert.filename
+    KONG_CLUSTER_CERT_KEY  = local_file.kong_clustering_key.filename
+    KONG_DATABASE_HOST     = "postgres-core.core.svc.cluster.local"
     KONG_DATABASE          = postgresql_database.kong.name
     KONG_DATABASE_USER     = postgresql_role.kong.name
     KONG_DATABASE_PASSWORD = local.kong_db_password

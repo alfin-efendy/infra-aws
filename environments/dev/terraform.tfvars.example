@@ -1,0 +1,66 @@
+project_name = "axorez"
+environment  = "dev"
+region       = "ap-southeast-1"
+eks_version  = "1.30"
+vpc_params = {
+  vpc_cidr               = "10.1.0.0/16"
+  enable_nat_gateway     = true
+  one_nat_gateway_per_az = true
+  single_nat_gateway     = false
+  enable_vpn_gateway     = false
+  enable_flow_log        = false
+}
+eks_params = {
+  cluster_endpoint_public_access = true
+  cluster_enabled_log_types      = ["audit", "api", "authenticator", "controllerManager", "scheduler"]
+}
+eks_managed_node_group_params = {
+  # additional_group = {
+  #   ami_type       = "AL2_ARM_64"
+  #   min_size       = 1
+  #   max_size       = 6
+  #   desired_size   = 2
+  #   instance_types = ["t4g.nano"]
+  #   capacity_type  = "ON_DEMAND"
+  #   taints = [
+  #     {
+  #       key    = "CriticalAddonsOnly"
+  #       value  = "true"
+  #       effect = "NO_SCHEDULE"
+  #     }
+  #   ]
+  #   max_unavailable_percentage = 80
+  # }
+
+  default_group = {
+    ami_type                   = "AL2_x86_64"
+    min_size                   = 1
+    max_size                   = 3
+    desired_size               = 2
+    instance_types             = ["t3a.medium"]
+    capacity_type              = "ON_DEMAND"
+    taints                     = []
+    max_unavailable_percentage = 90
+  }
+}
+postgres_core_params = {
+  instance_name             = "postgres-core"
+  database_name             = "postgres"
+  database_user             = "core"
+  database_port             = 5432
+  resources_limits_cpu      = "500m"
+  resources_limits_memory   = "512Mi"
+  resources_requests_cpu    = "100m"
+  resources_requests_memory = "256Mi"
+  image_tag                 = "16"
+  storage_size              = 5
+  storage_class             = "efs-sc"
+  namespace                 = "core"
+  replicas                  = 1
+  labels = {
+    app = "core"
+  }
+}
+kong_params = {
+  namespace = "core"
+}
