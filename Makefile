@@ -13,3 +13,7 @@ plan-dev:
 .PHONY: apply-dev
 apply-dev:
 	@cd "environments/dev" && terraform apply -var-file="terraform.tfvars" -auto-approve
+
+.PHONY: port-forward
+port-forward:
+	@kubectl port-forward svc/postgres-core 54321:5432 -n core

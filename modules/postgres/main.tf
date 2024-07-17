@@ -92,7 +92,7 @@ resource "kubernetes_persistent_volume_claim" "postgres-pvc" {
   }
 }
 
-resource "kubernetes_deployment" "postgres" {
+resource "kubernetes_stateful_set" "postgres" {
   metadata {
     name      = var.instance_name
     namespace = var.namespace
@@ -100,13 +100,15 @@ resource "kubernetes_deployment" "postgres" {
       app = var.instance_name
     }
   }
+
   spec {
-    replicas = var.replicas
+    service_name = var.instance_name
     selector {
       match_labels = {
         app = var.instance_name
       }
     }
+    replicas = var.replicas
     template {
       metadata {
         labels = {
@@ -202,6 +204,7 @@ resource "kubernetes_service" "postgres" {
     selector = {
       app = var.instance_name
     }
+    type = "LoadBalancer"
     port {
       port        = var.database_port
       target_port = var.database_port
